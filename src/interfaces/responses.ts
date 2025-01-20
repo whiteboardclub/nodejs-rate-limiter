@@ -5,7 +5,7 @@ interface BaseResponse {
 interface TokenBucketStrategyResponse {
   allowed: boolean;
   remaining: number;
-  retryAfter: number; // in milliseconds
+  retryAfterInMs: number; // in milliseconds
 }
 
 export { BaseResponse, TokenBucketStrategyResponse };

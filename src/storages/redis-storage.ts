@@ -1,5 +1,5 @@
-import { StorageType } from "../constants/storage-type";
-import BaseStorage from "../storages/base-storage";
+import { StorageType } from "../constants";
+import BaseStorage from "./base-storage";
 import { Redis } from "ioredis";
 
 class RedisStorage extends BaseStorage {

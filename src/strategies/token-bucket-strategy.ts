@@ -1,6 +1,5 @@
-import BaseStrategy from "../strategies/base-strategy";
-import { TokenBucketStrategyResponse } from "../interfaces/responses";
-import { TokenBucketStrategyOptions } from "../interfaces/options";
+import BaseStrategy from "./base-strategy";
+import { TokenBucketStrategyResponse, TokenBucketStrategyOptions } from "../interfaces";
 
 class TokenBucketStrategy extends BaseStrategy {
   private bucketCapacity: number;
@@ -116,7 +115,7 @@ class TokenBucketStrategy extends BaseStrategy {
       return {
         allowed: false,
         remaining: 0,
-        retryAfter: this.calculateRetryAfter(updatedTokens),
+        retryAfterInMs: this.calculateRetryAfter(updatedTokens),
       };
     }
 
@@ -125,7 +124,7 @@ class TokenBucketStrategy extends BaseStrategy {
     return {
       allowed: true,
       remaining: updatedTokens - 1,
-      retryAfter: this.calculateRetryAfter(updatedTokens - 1),
+      retryAfterInMs: this.calculateRetryAfter(updatedTokens - 1),
     };
   }
 
@@ -149,7 +148,7 @@ class TokenBucketStrategy extends BaseStrategy {
     return {
       allowed: this.isRequestAllowed(updatedTokens),
       remaining: updatedTokens,
-      retryAfter: this.calculateRetryAfter(updatedTokens),
+      retryAfterInMs: this.calculateRetryAfter(updatedTokens),
     };
   }
 }

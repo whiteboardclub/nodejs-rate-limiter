@@ -1,7 +1,7 @@
 import Redis from "ioredis";
-import RedisStorage from "../src/storages/redis-storage";
-import TokenBucketStrategy from "../src/strategies/token-bucket-strategy";
-import { TokenBucketStrategyOptions } from "../src/interfaces/options";
+import { RedisStorage } from "../src/storages/";
+import { TokenBucketStrategy } from "../src/strategies";
+import { TokenBucketStrategyOptions } from "../src/interfaces";
 
 const redis = new Redis();
 
@@ -44,7 +44,7 @@ describe("TokenBucketStrategy with RedisStorage", () => {
     const result = await tokenBucket.check(userKey);
     expect(result.allowed).toBe(false);
     expect(result.remaining).toBe(0);
-    expect(result.retryAfter).toBeGreaterThan(0);
+    expect(result.retryAfterInMs).toBeGreaterThan(0);
   });
 
   test("should refill tokens after some time", async () => {
@@ -112,16 +112,16 @@ describe("TokenBucketStrategy with RedisStorage", () => {
 
     expect(result.allowed).toBe(true);
     expect(result.remaining).toBe(0);
-    expect(result.retryAfter).toBeGreaterThan(0);
+    expect(result.retryAfterInMs).toBeGreaterThan(0);
   });
 
-  test("should calculate retryAfter correctly when no tokens are available", async () => {
+  test("should calculate retryAfterInMs correctly when no tokens are available", async () => {
     for (let i = 0; i < 10; i++) {
       await tokenBucket.check(userKey);
     }
 
     const result = await tokenBucket.check(userKey);
     expect(result.allowed).toBe(false);
-    expect(result.retryAfter).toBeGreaterThan(0);
+    expect(result.retryAfterInMs).toBeGreaterThan(0);
   });
 });
