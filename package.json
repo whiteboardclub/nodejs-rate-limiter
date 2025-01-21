@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "test": "jest --config jest.config.json",
+    "test:cov": "jest --config jest.config.json --coverage",
     "build": "pkgroll --src src/",
     "prepare": "husky install",
     "lint": "eslint --ignore-pattern '.gitignore' \"{src,tests}/**/*.+(ts|js|tsx)\"",
