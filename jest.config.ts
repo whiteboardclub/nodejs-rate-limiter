@@ -7,7 +7,7 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.ts"],
   testTimeout: 30000,
-  testMatch: ["**/?(*-)+(test).ts"],
+  testMatch: ["**/?(*.)+(test).ts"],
   moduleFileExtensions: ["js", "json", "ts"],
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
