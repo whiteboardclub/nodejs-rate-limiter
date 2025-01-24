@@ -1,1 +1,1 @@
-export * from "./storage-type";
+export * from "@constants/storage-type";

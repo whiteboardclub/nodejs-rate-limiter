@@ -8,8 +8,24 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "target": "es2022",
-    "types": ["jest"]
+    "types": ["jest"],
+    "baseUrl": "./",
+    "paths": {
+      "@storages": ["src/storages/index"],
+      "@storages/*": ["src/storages/*"],
+      "@strategies": ["src/strategies/index"],
+      "@strategies/*": ["src/strategies/*"],
+      "@interfaces": ["src/interfaces"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"],
+      "@constants": ["src/constants"],
+      "@constants/*": ["src/constants/*"],
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"]
+    }
   }
 }

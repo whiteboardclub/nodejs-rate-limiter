@@ -1,4 +1,4 @@
-import { StorageType } from "../constants";
+import { StorageType } from "@constants";
 
 abstract class BaseStorage {
   protected name: StorageType;

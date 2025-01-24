@@ -1,5 +1,5 @@
-import { BaseStorage } from "../storages";
-import { BaseResponse } from "../interfaces";
+import { BaseStorage } from "@storages";
+import { BaseResponse } from "@interfaces";
 
 abstract class BaseStrategy {
   protected store: BaseStorage;

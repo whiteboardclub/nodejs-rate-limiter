@@ -1,5 +1,5 @@
-import BaseStrategy from "./base-strategy";
-import { TokenBucketStrategyResponse, TokenBucketStrategyOptions } from "../interfaces";
+import BaseStrategy from "@strategies/base/base-strategy";
+import { TokenBucketStrategyResponse, TokenBucketStrategyOptions } from "@interfaces";
 
 class TokenBucketStrategy extends BaseStrategy {
   private bucketCapacity: number;

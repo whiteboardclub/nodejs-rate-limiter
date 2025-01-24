@@ -1,4 +1,4 @@
-import RedisStorage from "../storages/redis-storage";
+import RedisStorage from "@storages/redis/redis-storage";
 
 interface TokenBucketStrategyOptions {
   store: RedisStorage;

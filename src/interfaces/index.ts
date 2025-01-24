@@ -1,2 +1,2 @@
-export * from "./options";
-export * from "./responses";
+export * from "@interfaces/options";
+export * from "@interfaces/responses";

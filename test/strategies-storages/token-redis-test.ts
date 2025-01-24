@@ -1,7 +1,7 @@
 import Redis from "ioredis";
-import { RedisStorage } from "../src/storages/";
-import { TokenBucketStrategy } from "../src/strategies";
-import { TokenBucketStrategyOptions } from "../src/interfaces";
+import { RedisStorage } from "@storages";
+import { TokenBucketStrategy } from "@strategies";
+import { TokenBucketStrategyOptions } from "@interfaces";
 
 const redis = new Redis();
 
