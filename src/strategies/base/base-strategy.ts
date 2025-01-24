@@ -1,7 +1,7 @@
 import { BaseStorage } from "@storages";
 import { BaseResponse } from "@interfaces";
 
-abstract class BaseStrategy {
+export abstract class BaseStrategy {
   protected store: BaseStorage;
   constructor(store: BaseStorage) {
     this.store = store;
@@ -18,4 +18,3 @@ abstract class BaseStrategy {
    */
   abstract reset(_key: string): Promise<void>;
 }
-export default BaseStrategy;

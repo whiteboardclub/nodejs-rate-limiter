@@ -1,6 +1,6 @@
 import { StorageType } from "@constants";
 
-abstract class BaseStorage {
+export abstract class BaseStorage {
   protected name: StorageType;
   constructor(name: StorageType) {
     this.name = name;
@@ -25,5 +25,3 @@ abstract class BaseStorage {
    */
   abstract delete(_key: string): Promise<void>;
 }
-
-export default BaseStorage;

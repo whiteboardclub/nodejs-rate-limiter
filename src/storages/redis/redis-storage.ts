@@ -1,8 +1,8 @@
 import { StorageType } from "@constants";
-import BaseStorage from "@storages/base/base-storage";
+import { BaseStorage } from "@storages/base/base-storage";
 import { Redis } from "ioredis";
 
-class RedisStorage extends BaseStorage {
+export class RedisStorage extends BaseStorage {
   private redisClient: Redis;
 
   /**

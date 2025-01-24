@@ -44,7 +44,7 @@ describe("TokenBucketStrategy with RedisStorage", () => {
     const result = await tokenBucket.check(userKey);
     expect(result.allowed).toBe(false);
     expect(result.remaining).toBe(0);
-    expect(result.retryAfterInMs).toBeGreaterThan(0);
+    expect(result.retryAfterMs).toBeGreaterThan(0);
   });
 
   test("should refill tokens after some time", async () => {
@@ -112,16 +112,16 @@ describe("TokenBucketStrategy with RedisStorage", () => {
 
     expect(result.allowed).toBe(true);
     expect(result.remaining).toBe(0);
-    expect(result.retryAfterInMs).toBeGreaterThan(0);
+    expect(result.retryAfterMs).toBeGreaterThan(0);
   });
 
-  test("should calculate retryAfterInMs correctly when no tokens are available", async () => {
+  test("should calculate retryAfterMs correctly when no tokens are available", async () => {
     for (let i = 0; i < 10; i++) {
       await tokenBucket.check(userKey);
     }
 
     const result = await tokenBucket.check(userKey);
     expect(result.allowed).toBe(false);
-    expect(result.retryAfterInMs).toBeGreaterThan(0);
+    expect(result.retryAfterMs).toBeGreaterThan(0);
   });
 });

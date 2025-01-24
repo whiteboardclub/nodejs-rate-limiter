@@ -44,7 +44,7 @@ const userKey = "user:123";
   if (response.allowed) {
     console.log(`Request allowed. Remaining tokens: ${response.remaining}`);
   } else {
-    console.log(`Request denied. Retry after ${response.retryAfterInMs}ms. Remaining tokens: ${response.remaining}`);
+    console.log(`Request denied. Retry after ${response.retryAfterMs}ms. Remaining tokens: ${response.remaining}`);
   }
 
   // Reset the token bucket for a user
@@ -100,7 +100,7 @@ Checks whether a request is allowed under the current token bucket state.
 - **Returns**:
   - `allowed`: `boolean` - Whether the request is allowed.
   - `remaining`: `number` - The number of tokens remaining in the bucket.
-  - `retryAfterInMs`: `number` - The time in milliseconds until a retry is allowed (if `allowed` is `false`).
+  - `retryAfterMs`: `number` - The time in milliseconds until a retry is allowed (if `allowed` is `false`).
 
 #### Example
 
@@ -109,7 +109,7 @@ const response = await tokenBucket.check("user:123");
 if (response.allowed) {
   console.log("Request is allowed");
 } else {
-  console.log(`Retry after ${response.retryAfterInMs}ms`);
+  console.log(`Retry after ${response.retryAfterMs}ms`);
 }
 ```
 
@@ -141,7 +141,7 @@ Retrieves the current state of the token bucket without consuming any tokens.
 - **Returns**:
   - `allowed`: `boolean` - Whether requests are currently allowed.
   - `remaining`: `number` - The number of tokens remaining in the bucket.
-  - `retryAfterInMs`: `number` - The time in milliseconds until a retry is allowed.
+  - `retryAfterMs`: `number` - The time in milliseconds until a retry is allowed.
 
 #### Example
 
