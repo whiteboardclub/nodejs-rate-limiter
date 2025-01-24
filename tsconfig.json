@@ -14,9 +14,9 @@
     "types": ["jest"],
     "baseUrl": "./",
     "paths": {
-      "@storages": ["src/storages/index"],
+      "@storages": ["src/storages"],
       "@storages/*": ["src/storages/*"],
-      "@strategies": ["src/strategies/index"],
+      "@strategies": ["src/strategies"],
       "@strategies/*": ["src/strategies/*"],
       "@interfaces": ["src/interfaces"],
       "@interfaces/*": ["src/interfaces/*"],
@@ -26,6 +26,7 @@
       "@constants/*": ["src/constants/*"],
       "@config": ["src/config"],
       "@config/*": ["src/config/*"]
-    }
+    },
+    "declaration": true
   }
 }
