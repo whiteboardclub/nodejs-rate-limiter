@@ -1,17 +1,15 @@
-name: Check Pre-Commit Hooks
+name: Node.js CI
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - "main"
+    branches: ["main"]
   pull_request:
-    branches:
-      - "main"
-    types: [opened, synchronize, reopened]
+    branches: ["main"]
+
+permissions: write-all
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,10 +26,38 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --save-dev
+        run: npm ci
 
-      - name: Lint Code
-        run: npm run lint
+      - name: Start Redis with Docker Compose
+        run: docker compose up -d
 
-      - name: Check Formatting
-        run: npm run format
+      - name: Wait for Redis to be ready
+        run: |
+          echo "Waiting for Redis to be healthy..."
+          for i in {1..10}; do
+            if [ "$(docker inspect -f '{{.State.Health.Status}}' rate_limit_redis)" == "healthy" ]; then
+              echo "Redis is ready!"
+              exit 0
+            fi
+            echo "Still waiting for Redis..."
+            sleep 3
+          done
+          echo "Redis did not become healthy in time" && exit 1
+
+      - name: Run tests
+        run: npm run test:cov
+
+      - name: Code Coverage Report
+        if: github.event_name == 'pull_request'
+        uses: vebr/jest-lcov-reporter@v0.2.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./coverage/lcov.info
+          update-comment: true
+
+      - name: Stop Redis
+        if: always()
+        run: docker compose down
+
+      - name: Build Package
+        run: npm run build --if-present

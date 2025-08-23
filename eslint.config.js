@@ -23,6 +23,15 @@ export default [
     rules: {
       ...pluginJs.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
+      "no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          args: "after-used",
+          ignoreRestSiblings: true,
+          argsIgnorePattern: "^_", // Ignore unused arguments that start with an underscore
+        },
+      ],
     },
     ignores: [".gitignore"],
   },
