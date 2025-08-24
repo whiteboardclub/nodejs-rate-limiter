@@ -1,6 +1,6 @@
 {
   "name": "nodejs-rate-limiter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A rate limiting library for Node, using Redis. Implements 5 different rate limiting algorithms.",
   "type": "module",
   "exports": {
@@ -16,18 +16,16 @@
   "engines": {
     "node": ">= 22"
   },
-  "homepage": "https://github.com/whiteboardclub/node-rate-limit",
-  "repository": "https://github.com/whiteboardclub/node-rate-limit",
+  "homepage": "https://github.com/whiteboardclub/nodejs-rate-limiter",
+  "repository": "https://github.com/whiteboardclub/nodejs-rate-limiter",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
   "files": [
     "dist/",
-    "tsconfig.json",
     "package.json",
     "readme.md",
-    "license.md",
-    "changelog.md"
+    "LICENSE"
   ],
   "scripts": {
     "test": "jest --config jest.config.ts",

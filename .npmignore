@@ -1,0 +1,11 @@
+test/
+src/
+*.tsbuildinfo
+jest.config.ts
+.prettierrc.json
+.prettierignore
+eslint.config.js
+.github/
+.husky/
+docker-compose.yml
+changelog.md

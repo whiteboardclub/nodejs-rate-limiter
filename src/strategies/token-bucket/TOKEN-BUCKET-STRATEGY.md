@@ -4,7 +4,7 @@
 
 ## Overview
 
-The `TokenBucketStrategy` allows you to implement rate-limiting by controlling the number of tokens available for a given key. It uses a Redis store to persist token bucket states, making it suitable for distributed systems.
+The `TokenBucketStrategy` allows you to implement rate-limiting by controlling the number of tokens available for a given key. It uses a compatible storage provider to persist token bucket states, making it suitable for distributed systems.
 
 ### Features
 
@@ -19,17 +19,14 @@ The `TokenBucketStrategy` allows you to implement rate-limiting by controlling t
 ### Basic Example
 
 ```typescript
-import Redis from "ioredis";
-import { TokenBucketStrategy, RedisStorage } from "node-rate-limit";
+import { TokenBucketStrategy, MemoryStorage } from "nodejs-rate-limiter";
 
-const redis = new Redis();
-
-// Create an instance of RedisStorage
-const redisStorage = new RedisStorage(redis);
+// Create an instance of a storage
+const memoryStorage = new MemoryStorage();
 
 // Configure the TokenBucketStrategy
 const tokenBucket = new TokenBucketStrategy({
-  store: redisStorage,
+  store: memoryStorage,
   bucketCapacity: 10, // Maximum number of tokens in the bucket
   refillRate: 2, // Tokens added per second
 });
@@ -80,7 +77,7 @@ new TokenBucketStrategy(options: TokenBucketStrategyOptions)
 
 ```typescript
 const options = {
-  store: redisStorage,
+  store: memoryStorage,
   bucketCapacity: 10,
   refillRate: 2,
 };
@@ -166,7 +163,7 @@ The constructor throws errors if invalid options are provided:
 ```typescript
 try {
   new TokenBucketStrategy({
-    store: redisStorage,
+    store: memoryStorage,
     bucketCapacity: 0,
     refillRate: -1,
   });
@@ -176,3 +173,50 @@ try {
 ```
 
 ---
+
+### Storage Errors
+
+If the underlying storage fails (e.g., Redis connection error), the methods will throw an error. It is recommended to wrap calls in a `try...catch` block.
+
+#### Example
+
+```typescript
+try {
+  await tokenBucket.check("user:123");
+} catch (err) {
+  console.error("Storage error:", err);
+}
+```
+
+---
+
+## How It Works
+
+The `TokenBucketStrategy` works as follows:
+
+1. **Initialization**: When a request is made for a new key, a token bucket is created with the maximum capacity.
+2. **Token Refill**: Tokens are refilled based on the time elapsed since the last request. The refill logic is lazy, meaning tokens are only added when a request is made.
+3. **Token Consumption**: If enough tokens are available, one token is consumed, and the request is allowed. Otherwise, the request is denied.
+4. **State Persistence**: The bucket's state (remaining tokens and last update timestamp) is stored in the provided storage to ensure it persists across requests and instances.
+
+**Note on Atomicity**: This implementation does not guarantee atomic operations, as it makes separate calls to the storage for getting and setting the token count. This could lead to race conditions in a highly concurrent, distributed environment. For guaranteed atomicity, use a storage adapter that implements atomic operations (e.g., using Lua scripts for Redis).
+
+---
+
+## Use Cases
+
+- **API Rate Limiting**: Protect your APIs from abuse by limiting the number of requests per user or IP address.
+- **Throttling**: Control the rate of outbound requests to other services to avoid overwhelming them.
+- **Fair Usage**: Ensure fair resource allocation among users by preventing any single user from consuming excessive resources.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please submit a pull request or create an issue to get started.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](../../../LICENSE) file for details.
