@@ -1,6 +1,6 @@
 {
   "name": "nodejs-rate-limiter",
-  "version": "1.0.1",
+  "version": "1.1.4",
   "description": "A rate limiting library for Node, using Redis. Implements 5 different rate limiting algorithms.",
   "type": "module",
   "exports": {
