@@ -1,4 +1,4 @@
-name: Release Tag
+name: Release Tag & Publish NPM
 
 on:
   pull_request:
@@ -41,12 +41,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: ${{ env.tag-update }}
           WITH_V: false
-
-      - name: Create release
-        uses: ncipollo/release-action@v1.10.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.bump-tag.outputs.tag }}
-          name: Release ${{ steps.bump-tag.outputs.tag }}
-          draft: false
-          prerelease: false
