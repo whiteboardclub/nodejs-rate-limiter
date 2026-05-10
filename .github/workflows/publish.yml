@@ -1,19 +1,18 @@
-name: Publish to NPM & Release
+name: Publish to NPM
 
 on:
   release:
     types: [published]
 
-permissions: write-all
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
-  publish-and-release:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,5 +29,3 @@ jobs:
 
       - name: Publish to NPM
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
