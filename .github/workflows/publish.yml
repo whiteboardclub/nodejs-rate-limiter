@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  id-token: write
+  id-token: write # Required for OIDC/Trusted Publishers
   contents: read
 
 jobs:
@@ -18,8 +18,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          registry-url: https://npm.pkg.github.com
           cache: "npm"
+          # CRITICAL: registry-url has been removed so OIDC works cleanly
+
+      - name: Upgrade NPM to support Trusted Publishers
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
@@ -28,4 +31,5 @@ jobs:
         run: npm run build
 
       - name: Publish to NPM
-        run: npm publish
+        # Added the provenance flag to verify the package source
+        run: npm publish --provenance
