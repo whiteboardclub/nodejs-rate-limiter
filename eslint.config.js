@@ -23,13 +23,15 @@ export default [
     rules: {
       ...pluginJs.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
-      "no-unused-vars": [
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
         "error",
         {
           vars: "all",
           args: "after-used",
           ignoreRestSiblings: true,
-          argsIgnorePattern: "^_", // Ignore unused arguments that start with an underscore
+          argsIgnorePattern: "^_", // ignore unused args starting with _
+          varsIgnorePattern: "^_", // ignore unused vars starting with _
         },
       ],
     },
