@@ -11,7 +11,7 @@ export class TokenBucketStrategy extends BaseStrategy {
    */
   constructor(options: TokenBucketStrategyOptions) {
     if (!options.store) {
-      throw new Error("A valid store implementation is required.");
+      throw new Error("A valid store implementation is required for TokenBucketStrategy.");
     }
 
     super(options.store);
@@ -26,11 +26,17 @@ export class TokenBucketStrategy extends BaseStrategy {
    * @param options The TokenBucketStrategyOptions to validate
    */
   private validateOptions(options: TokenBucketStrategyOptions): void {
-    if (options.bucketCapacity <= 0 || options.refillRate <= 0) {
-      throw new Error("bucketCapacity and refillRate must be greater than 0.");
+    if (options.bucketCapacity <= 0) {
+      throw new Error("TokenBucketStrategy option 'bucketCapacity' must be greater than 0.");
     }
-    if (!Number.isInteger(options.bucketCapacity) || !Number.isInteger(options.refillRate)) {
-      throw new Error("bucketCapacity and refillRate must be integers.");
+    if (options.refillRate <= 0) {
+      throw new Error("TokenBucketStrategy option 'refillRate' must be greater than 0.");
+    }
+    if (!Number.isInteger(options.bucketCapacity)) {
+      throw new Error("TokenBucketStrategy option 'bucketCapacity' must be an integer.");
+    }
+    if (!Number.isInteger(options.refillRate)) {
+      throw new Error("TokenBucketStrategy option 'refillRate' must be an integer.");
     }
   }
 
@@ -77,14 +83,21 @@ export class TokenBucketStrategy extends BaseStrategy {
 
   /**
    * Updates the token bucket state in the store.
+   * Uses atomic operation if available, otherwise falls back to non-atomic set operations.
    * @param key A unique key to identify the rate limit
    * @param tokens Updated token count
    * @param lastRefill Last refill timestamp
    */
   private async updateTokenBucketState(key: string, tokens: number, lastRefill: number): Promise<void> {
     const { bucketKey, lastRefillKey } = this.getTokenBucketKeys(key);
-    await this.store.set(bucketKey, tokens);
-    await this.store.set(lastRefillKey, lastRefill);
+
+    // Use atomic operation if available, otherwise use separate set calls
+    if (this.store.updateTokenBucketState) {
+      await this.store.updateTokenBucketState(bucketKey, lastRefillKey, tokens, lastRefill);
+    } else {
+      await this.store.set(bucketKey, tokens);
+      await this.store.set(lastRefillKey, lastRefill);
+    }
   }
 
   /**

@@ -11,7 +11,7 @@ export default {
   moduleFileExtensions: ["js", "json", "ts"],
   moduleNameMapper: {
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/" }),
-    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "^(.*)\\.js$": "$1",
   },
   extensionsToTreatAsEsm: [".ts"],
   transform: {

@@ -1,5 +1,5 @@
 {
-  "include": ["src/", "test/"],
+  "include": ["src/", "test/", "src/types"],
   "exclude": ["node_modules/"],
   "compilerOptions": {
     "strict": true,
@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "target": "es2022",
-    "types": ["jest"],
+    "types": ["jest", "ioredis"],
     "baseUrl": "./",
     "paths": {
       "@storages": ["src/storages"],
@@ -24,8 +24,8 @@
       "@utils/*": ["src/utils/*"],
       "@constants": ["src/constants"],
       "@constants/*": ["src/constants/*"],
-      "@config": ["src/config"],
-      "@config/*": ["src/config/*"]
+      "@errors": ["src/errors"],
+      "@errors/*": ["src/errors/*"]
     },
     "declaration": true
   }

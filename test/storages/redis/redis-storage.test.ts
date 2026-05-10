@@ -2,24 +2,33 @@ import { Redis } from "ioredis";
 import { RedisStorage } from "@storages";
 
 jest.mock("ioredis", () => {
+  const mockRedisInstance = {
+    set: jest.fn(),
+    get: jest.fn(),
+    del: jest.fn(),
+    exists: jest.fn(),
+    flushall: jest.fn(),
+    // Add defineCommand to the mock instance
+    defineCommand: jest.fn((name, _) => {
+      // Simulate defining a command by adding it to the mock instance
+      (mockRedisInstance as any)[name] = jest.fn();
+    }),
+  };
+
   return {
-    Redis: jest.fn().mockImplementation(() => ({
-      set: jest.fn(),
-      get: jest.fn(),
-      del: jest.fn(),
-      exists: jest.fn(),
-      flushall: jest.fn(),
-    })),
+    Redis: jest.fn().mockImplementation(() => mockRedisInstance),
   };
 });
 
 describe("RedisStorage", () => {
-  let redisClientMock: jest.Mocked<Redis>;
+  let redisClientMock: jest.Mocked<Redis & { atomicIncrement: jest.Mock }>;
   let redisStorage: RedisStorage;
 
   beforeEach(() => {
-    redisClientMock = new Redis() as jest.Mocked<Redis>;
+    redisClientMock = new Redis() as jest.Mocked<Redis & { atomicIncrement: jest.Mock }>;
     redisStorage = new RedisStorage(redisClientMock);
+    // Mock the atomicIncrement method after the command is defined
+    redisClientMock.atomicIncrement.mockResolvedValue(1);
   });
 
   afterEach(() => {
@@ -109,7 +118,7 @@ describe("RedisStorage", () => {
     const value = { name: "John Doe" };
     redisClientMock.set.mockRejectedValueOnce(new Error("Redis error"));
 
-    await expect(redisStorage.set(key, value)).rejects.toThrow("Failed to set value in Redis.");
+    await expect(redisStorage.set(key, value)).rejects.toThrow("Failed to set value in Redis: Redis error");
   });
 
   it("should handle errors while retrieving a value", async () => {
@@ -117,27 +126,49 @@ describe("RedisStorage", () => {
     const redisError = new Error("Redis error");
     redisClientMock.get.mockRejectedValueOnce(redisError);
 
-    const result = await redisStorage.get(key);
-    expect(result).toBeNull();
+    await expect(redisStorage.get(key)).rejects.toThrow("Failed to get value from Redis: Redis error");
   });
 
   it("should handle errors while deleting a key", async () => {
     const key = "test-key";
     redisClientMock.del.mockRejectedValueOnce(new Error("Redis error"));
 
-    await expect(redisStorage.delete(key)).rejects.toThrow('Error deleting key "test-key"');
+    await expect(redisStorage.delete(key)).rejects.toThrow('Error deleting key "test-key" from Redis: Redis error');
   });
 
   it("should handle errors while checking existence of a key", async () => {
     const key = "test-key";
     redisClientMock.exists.mockRejectedValueOnce(new Error("Redis error"));
 
-    await expect(redisStorage.exists(key)).rejects.toThrow('Error checking existence of key "test-key"');
+    await expect(redisStorage.exists(key)).rejects.toThrow(
+      'Error checking existence of key "test-key" in Redis: Redis error'
+    );
   });
 
   it("should handle errors while flushing all keys", async () => {
     redisClientMock.flushall.mockRejectedValueOnce(new Error("Redis error"));
 
-    await expect(redisStorage.flushAll()).rejects.toThrow("Failed to flush all keys in Redis.");
+    await expect(redisStorage.flushAll()).rejects.toThrow("Failed to flush all keys in Redis: Redis error");
+  });
+
+  it("should increment a key and set TTL", async () => {
+    const key = "test-key";
+    const ttl = 10000;
+    redisClientMock.atomicIncrement.mockResolvedValueOnce(5);
+
+    const result = await redisStorage.increment(key, ttl);
+
+    expect(redisClientMock.atomicIncrement).toHaveBeenCalledWith(key, ttl);
+    expect(result).toBe(5);
+  });
+
+  it("should handle errors while incrementing a key", async () => {
+    const key = "test-key";
+    const ttl = 10000;
+    redisClientMock.atomicIncrement.mockRejectedValueOnce(new Error("Redis error"));
+
+    await expect(redisStorage.increment(key, ttl)).rejects.toThrow(
+      'Failed to increment key "test-key" in Redis: Redis error'
+    );
   });
 });

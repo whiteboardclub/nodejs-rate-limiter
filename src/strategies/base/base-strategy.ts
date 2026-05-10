@@ -13,8 +13,14 @@ export abstract class BaseStrategy {
   abstract check(_key: string): Promise<BaseResponse>;
 
   /**
+   * Retrieve the current rate limit state without consuming a request/token.
+   * @param _key The unique identifier for the resource being rate limited.
+   */
+  abstract get(_key: string): Promise<BaseResponse>;
+
+  /**
    * Optionally reset any stored state for a given key.
-   * @param key The unique identifier for the resource.
+   * @param _key The unique identifier for the resource.
    */
   abstract reset(_key: string): Promise<void>;
 }

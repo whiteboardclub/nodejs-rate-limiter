@@ -1,7 +1,13 @@
-import RedisStorage from "@storages/redis/redis-storage";
+import { BaseStorage } from "@storages";
 
 export interface TokenBucketStrategyOptions {
-  store: RedisStorage;
+  store: BaseStorage;
   bucketCapacity: number;
   refillRate: number;
+}
+
+export interface FixedWindowStrategyOptions {
+  store: BaseStorage;
+  windowSize: number;
+  maxRequests: number;
 }

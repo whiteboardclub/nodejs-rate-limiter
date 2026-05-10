@@ -1,11 +1,8 @@
-interface BaseResponse {
-  allowed: boolean;
-}
-
-interface TokenBucketStrategyResponse {
+export interface BaseResponse {
   allowed: boolean;
   remaining: number;
-  retryAfterMs: number; // in milliseconds
+  retryAfterMs: number;
 }
 
-export { BaseResponse, TokenBucketStrategyResponse };
+export interface TokenBucketStrategyResponse extends BaseResponse {}
+export interface FixedWindowStrategyResponse extends BaseResponse {}
