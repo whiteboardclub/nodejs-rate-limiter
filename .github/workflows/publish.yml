@@ -12,7 +12,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -22,7 +22,8 @@ jobs:
           # CRITICAL: registry-url has been removed so OIDC works cleanly
 
       - name: Upgrade NPM to support Trusted Publishers
-        run: npm install -g npm@latest
+        # ADDED -y: Prevents CI from hanging if npx asks for confirmation
+        run: npx -y npm@latest install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
